@@ -1328,7 +1328,7 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
     if (halvings >= 64)
         return 0;
 
-    CAmount nSubsidy = 5000 * COIN * Concensus::GetGPUMultiplier();
+    CAmount nSubsidy = 5000 * COIN * Consensus::GetGPUMultiplier();
     // Subsidy is cut in half every 2,100,000 blocks which will occur approximately every 4 years. Retrives GPU Multiplier Function
     nSubsidy >>= halvings;
     return nSubsidy;
