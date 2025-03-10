@@ -79,6 +79,31 @@ struct Params {
     bool nSegwitEnabled;
     bool nCSVEnabled;
 };
+
+// Function to get GPU-based mining reward multiplier
+inline double GetGPUMultiplier() {
+    std::string gpuModel = GetMinerGPU(); // Function to retrieve the miner's GPU model
+
+    // Define multipliers for different GPU generations
+    if (gpuModel.find("GTX 1070") != std::string::npos || 
+        gpuModel.find("GTX 1080") != std::string::npos) {
+        return 2.0;  // Older GPUs get 2x rewards
+    } 
+    else if (gpuModel.find("RTX 20") != std::string::npos) {
+        return 1.5;  // RTX 20xx series gets 1.5x rewards
+    } 
+    else if (gpuModel.find("RTX 30") != std::string::npos) {
+        return 1.0;  // RTX 30xx series gets normal rewards
+    } 
+    else if (gpuModel.find("RTX 40") != std::string::npos) {
+        return 0.75; // RTX 40xx series gets 0.75x rewards
+    }
+    else if (gpuModel.find("RTX 50") != std::string::npos) {
+        return 0.5;  // RTX 50xx series gets 0.5x rewards (newest gen = lowest reward)
+    }
+    return 1.0;  // Default (if unknown GPU)
+}
+
 } // namespace Consensus
 
 #endif // RAVEN_CONSENSUS_PARAMS_H
