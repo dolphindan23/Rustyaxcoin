@@ -15,6 +15,8 @@
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/ordered_index.hpp>
 
+#include <string>
+
 class CBlockIndex;
 class CChainParams;
 class CScript;
@@ -207,4 +209,8 @@ void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned
 int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev);
 
 int GenerateRavens(bool fGenerate, int nThreads, const CChainParams& chainparams);
+
+// Declare GPU detection function
+std::string GetMinerGPU();
+
 #endif // RAVEN_MINER_H
