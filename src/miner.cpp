@@ -37,6 +37,42 @@
 #include <queue>
 #include <utility>
 
+#include <string>
+
+#ifdef USE_CUDA
+#include <cuda_runtime.h>
+#endif
+
+#ifdef USE_OPENCL
+#include <CL/cl.h>
+#endif
+
+std::string GetMinerGPU() {
+    std::string gpuName = "Unknown GPU";
+
+    // CUDA Detection (NVIDIA)
+    #ifdef USE_CUDA
+        cudaDeviceProp prop;
+        if (cudaGetDeviceProperties(&prop, 0) == cudaSuccess) {
+            gpuName = std::string(prop.name);
+        }
+    #endif
+
+    // OpenCL Detection (AMD & Intel)
+    #ifdef USE_OPENCL
+        cl_platform_id platform;
+        cl_device_id device;
+        char buffer[128];
+
+        if (clGetPlatformIDs(1, &platform, nullptr) == CL_SUCCESS &&
+            clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 1, &device, nullptr) == CL_SUCCESS &&
+            clGetDeviceInfo(device, CL_DEVICE_NAME, sizeof(buffer), buffer, nullptr) == CL_SUCCESS) {
+            gpuName = std::string(buffer);
+        }
+    #endif
+
+    return gpuName;
+}
 
 extern std::vector<CWalletRef> vpwallets;
 //////////////////////////////////////////////////////////////////////////////
