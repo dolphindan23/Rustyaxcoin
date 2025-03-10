@@ -11,6 +11,8 @@
 #include <map>
 #include <string>
 
+#include "miner.h"  // Include miner functions for GPU detection
+
 namespace Consensus {
 
 enum DeploymentPos
