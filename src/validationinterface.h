@@ -50,7 +50,7 @@ protected:
      */
     virtual void BlockConnected(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindex, const std::vector<CTransactionRef> &txnConflicted) {}
     /** Notifies listeners of a block being disconnected */
-    virtual void BlockDisconnected(const std::shared_ptr<const CBlock> &block) {}
+    virtual void BlockDisconnected(const std::shared_ptr<const CBlock>& pblock) = 0;
     /** Notifies listeners of the new active block chain on-disk. */
     virtual void SetBestChain(const CBlockLocator &locator) {}
     /** Tells listeners to broadcast their data. */
