@@ -106,7 +106,7 @@ public:
     boost::signals2::signal<void (const std::string &title, int nProgress, bool resume_possible)> ShowProgress;
 
     /** New block has been accepted */
-    boost::signals2::signal<void (bool, const CBlockIndex *)> NotifyBlockTip;
+    boost::signals2::signal<void (bool, std::shared_ptr<const CBlockIndex>)> NotifyHeaderTip;
 
     /** Best header has changed */
     boost::signals2::signal<void (bool, const CBlockIndex *)> NotifyHeaderTip;
