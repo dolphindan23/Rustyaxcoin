@@ -3176,7 +3176,7 @@ bool static DisconnectTip(CValidationState& state, const CChainParams& chainpara
     UpdateTip(pindexDelete->pprev, chainparams);
     // Let wallets know transactions went from 1-confirmed to
     // 0-confirmed or conflicted:
-    GetMainSignals().BlockDisconnected.connect(boost::bind(&BlockDisconnected, _1));
+    GetMainSignals().BlockDisconnected(std::make_shared<const CBlock>(pblock));
     return true;
 }
 
