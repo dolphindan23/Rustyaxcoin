@@ -1083,7 +1083,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         }
     }
 
-    GetMainSignals().TransactionAddedToMempool(ptx);
+    GetMainSignals().TransactionAddedToMempool.connect(boost::bind(&TransactionAddedToMempool, _1));
 
     return true;
 }
@@ -3623,7 +3623,7 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
 
             for (const PerBlockConnectTrace& trace : connectTrace.GetBlocksConnected()) {
                 assert(trace.pblock && trace.pindex);
-                GetMainSignals().BlockConnected(trace.pblock, trace.pindex, *trace.conflictedTxs);
+                GetMainSignals().BlockConnected.connect(boost::bind(&BlockConnected, _1, _2, _3));
             }
         }
         // When we reach this point, we switched to a new tip (stored in pindexNewTip).
@@ -3631,7 +3631,7 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
         // Notifications/callbacks that can run without cs_main
 
         // Notify external listeners about the new tip.
-        GetMainSignals().UpdatedBlockTip(pindexNewTip, pindexFork, fInitialDownload);
+        GetMainSignals().UpdatedBlockTip.connect(boost::bind(&UpdatedBlockTip, _1, _2, _3));
 
         // Always notify the UI if a new block tip was connected
         if (pindexFork != pindexNewTip) {
@@ -4413,7 +4413,7 @@ static bool AcceptBlock(const std::shared_ptr<const CBlock>& pblock, CValidation
     // Header is valid/has work, merkle tree and segwit merkle tree are good...RELAY NOW
     // (but if it does not build on our best tip, let the SendMessages loop relay it)
     if (!IsInitialBlockDownload() && chainActive.Tip() == pindex->pprev)
-        GetMainSignals().NewPoWValidBlock(pindex, pblock);
+        GetMainSignals().NewPoWValidBlock.connect(boost::bind(&NewPoWValidBlock, _1, _2));
 
     int nHeight = pindex->nHeight;
 
@@ -4460,7 +4460,7 @@ bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<cons
 
         CheckBlockIndex(chainparams.GetConsensus());
         if (!ret) {
-            GetMainSignals().BlockChecked(*pblock, state);
+            GetMainSignals().BlockChecked.connect(boost::bind(&BlockChecked, _1, _2));
             return error("%s: AcceptBlock FAILED (%s)", __func__, state.GetDebugMessage());
         }
     }
